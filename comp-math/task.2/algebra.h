@@ -8,7 +8,7 @@
 #include <fstream>
 #include <filesystem>
 
-class matrix{
+class matrix {
 private:
     int x_size;
     int y_size;
@@ -16,9 +16,11 @@ private:
 public:
     matrix(int x_size_, int y_size_, std::vector<double> content_);
 
-    double get_x_size();
+    int get_x_size();
 
-    double get_y_size();
+    int get_y_size();
+
+    matrix operator*(matrix &other);
 
     void print_matrix();
 };

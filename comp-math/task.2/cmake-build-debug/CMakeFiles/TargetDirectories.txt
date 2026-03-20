@@ -1,0 +1,3 @@
+C:/Users/lokhm/Repositories/mipt-6nd-term/comp-math/task.2/cmake-build-debug/CMakeFiles/app.dir
+C:/Users/lokhm/Repositories/mipt-6nd-term/comp-math/task.2/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/lokhm/Repositories/mipt-6nd-term/comp-math/task.2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
