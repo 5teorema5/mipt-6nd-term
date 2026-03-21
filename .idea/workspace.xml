@@ -21,6 +21,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dca5e6b3-06be-4130-926d-31f1909deadd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/comp-math/task.2/algebra.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/comp-math/task.2/algebra.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/comp-math/task.2/algebra.h" beforeDir="false" afterPath="$PROJECT_DIR$/comp-math/task.2/algebra.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/comp-math/task.2/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/comp-math/task.2/main.cpp" afterDir="false" />
@@ -86,7 +87,7 @@
       <option name="presentableId" value="Default" />
       <updated>1774017667467</updated>
       <workItem from="1774017668802" duration="123000" />
-      <workItem from="1774017802481" duration="5821000" />
+      <workItem from="1774017802481" duration="13549000" />
     </task>
     <servers />
   </component>
