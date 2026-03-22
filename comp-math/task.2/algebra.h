@@ -38,6 +38,8 @@ public:
 
     matrix operator/(double c) const;
 
+    std::vector<double> operator*(const std::vector<double> other) const;
+
     matrix operator*(const matrix &other) const;
 
     void print_matrix();

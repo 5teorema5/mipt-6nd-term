@@ -77,7 +77,6 @@ matrix matrix::inverse() const {
 double& matrix::operator()(int i, int j) {
     if (i >= this->x_size or j >= this->y_size) {
         std::cout << "Matrix size error" << '\n';
-        return 0;
     } else {
         return this->content[j][i];
     }
@@ -142,6 +141,22 @@ matrix matrix::operator/(double c) const {
     return matrix(this->x_size, this->y_size, new_content);
 }
 
+std::vector<double> matrix::operator*(const std::vector<double> other) const {
+    if (this->x_size != other.size()) {
+        std::cout << "Matrix-vector multiplication error" << '\n';
+        return std::vector<double>();
+    }
+    std::vector<double> result(y_size, 0.0);
+    for (int j = 0; j < y_size; j++) {
+        double sum = 0;
+        for (int i = 0; i < x_size; i++) {
+            sum += content[j][i] * other[i];
+        }
+        result[i] = sum;
+    }
+    return result;
+}
+
 matrix matrix::operator*(const matrix &other) const {
     if (this->x_size != other.y_size) {
         std::cout << "Matrix multiplication error" << '\n';
@@ -154,7 +169,6 @@ matrix matrix::operator*(const matrix &other) const {
             for (int i = 0; i < new_x; i++) {
                 double sum = 0;
                 for (int k = 0; k < x_size; k++) {
-//                    std::cout << content[k][j] << " * " << other.content[j][k] << '\n';
                     sum += content[j][k] * other.content[k][i];
                 }
                 new_content[i + j * new_x] = sum;

@@ -6,8 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCES
         main.cpp
+        grid.cpp
         algebra.cpp
-        algebra.h
+        gas.h
         )
 
 add_executable(app ${SOURCES})

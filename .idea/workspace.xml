@@ -21,7 +21,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dca5e6b3-06be-4130-926d-31f1909deadd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/comp-math/task.2/grid.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/comp-math/task.2/grid.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/comp-math/task.2/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/comp-math/task.2/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/comp-math/task.2/algebra.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/comp-math/task.2/algebra.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/comp-math/task.2/algebra.h" beforeDir="false" afterPath="$PROJECT_DIR$/comp-math/task.2/algebra.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/comp-math/task.2/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/comp-math/task.2/main.cpp" afterDir="false" />
@@ -59,13 +62,18 @@
     "WebServerToolWindowFactoryState": "false",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "C:/Users/lokhm/Repositories/mipt-6nd-term",
+    "last_opened_file_path": "C:/Users/lokhm/Repositories/mipt-6nd-term/comp-math/task.2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\lokhm\Repositories\mipt-6nd-term\comp-math\task.2" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
@@ -87,11 +95,22 @@
       <option name="presentableId" value="Default" />
       <updated>1774017667467</updated>
       <workItem from="1774017668802" duration="123000" />
-      <workItem from="1774017802481" duration="13549000" />
+      <workItem from="1774017802481" duration="18923000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
