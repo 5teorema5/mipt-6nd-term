@@ -21,6 +21,8 @@ private:
 public:
     grid2d(double L_, double T_, double h_, double t_);
 
+    void add_time_layer(double time);
+
     double get_L();
 
     double get_T();
@@ -29,9 +31,9 @@ public:
 
     double get_t();
 
-    double get_nx();
+    int get_nx();
 
-    double get_ny();
+    int get_ny();
 
     double get_value(int i, int j);
 

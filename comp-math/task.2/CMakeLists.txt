@@ -8,7 +8,6 @@ set(SOURCES
         main.cpp
         grid.cpp
         algebra.cpp
-        gas.h
         )
 
 add_executable(app ${SOURCES})

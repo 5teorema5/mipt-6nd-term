@@ -2,7 +2,7 @@
 
 grid2d::grid2d(double L_, double T_, double h_, double t_) : L(L_), T(T_), h(h_), t(t_) {
     nx = L / h + 1;
-    ny = T / t + 1;
+    ny = 1;
 
     x_coord.resize(nx);
     for (int i = 0; i < nx; i++) {
@@ -15,6 +15,14 @@ grid2d::grid2d(double L_, double T_, double h_, double t_) : L(L_), T(T_), h(h_)
     value.resize(nx);
     for (int i = 0; i < nx; i++) {
         value[i].resize(ny, 0.0);
+    }
+}
+
+void grid2d::add_time_layer(double time) {
+    this->ny++;
+    y_coord.push_back(time);
+    for (int i = 0; i < nx; i++) {
+        value[i].push_back(0.0);
     }
 }
 
@@ -34,11 +42,11 @@ double grid2d::get_t() {
     return t;
 }
 
-double grid2d::get_nx() {
+int grid2d::get_nx() {
     return this->nx;
 }
 
-double grid2d::get_ny() {
+int grid2d::get_ny() {
     return this->ny;
 }
 
@@ -88,21 +96,27 @@ std::string grid2d::formatIndex(int index, int width) {
 }
 
 void grid2d::save_to_file(std::string name) {
-    std::string path = "../data/" + name;
+    std::string path = "../data/";
     std::filesystem::create_directories(path);
+    std::string filename = path + name + ".csv";
+    std::ofstream file(filename);
 
-    for (int j = 1; j < ny + 1; j++) {
-        std::string filename = path + ".csv";
-
-        std::ofstream file(filename);
-
-        file << "x,value,time=" << y_coord[j - 1] << '\n';
-
-        file << std::fixed << std::setprecision(6);
-        for (int i = 1; i < nx + 1; i++) {
-            file << x_coord[i - 1] << "," << value[i - 1][j - 1] << '\n';
-        }
-
-        file.close();
+    if (!file.is_open()) {
+        std::cout << "Error opening file: " << filename << std::endl;
+        return;
     }
+    file << "time";
+    for (int i = 1; i < nx + 1; i++) {
+        file << ",x=" << std::fixed << std::setprecision(6) << x_coord[i - 1];
+    }
+    file << '\n';
+    for (int j = 1; j < ny + 1; j++) {
+        file << std::fixed << std::setprecision(8) << y_coord[j - 1];
+        for (int i = 1; i < nx + 1; i++) {
+            file << "," << value[i - 1][j - 1];
+        }
+        file << '\n';
+    }
+    file.close();
+    std::cout << "Saved to " << filename << std::endl;
 }

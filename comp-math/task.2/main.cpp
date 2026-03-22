@@ -35,19 +35,16 @@ struct state {
     void calculate_e(double gamma) {
         e = p / ((gamma - 1) * rho);
     }
-
-
 };
-
 
 int main() {
     int L = 10;
     double T = 0.02;
     double gamma = 5.0 / 3.0;
-    double h = 0.5;       // шаг по пространству
-    double t_init = 0.05;     // шаг по времени
+    double h = 0.1;       // шаг по пространству
+    double t_init = 10e-7;     // шаг по времени
     double t = t_init;
-    double CFL = 0.005;     // число Куранта меньше 0.01 для устойчивости
+    double CFL = 0.01;     // число Куранта меньше 0.01 для устойчивости
 
     state left_state = {0.0, 13.0, 10e5, 0.0};
     state right_state = {0.0, 1.3, 1e5, 0.0};
@@ -89,11 +86,17 @@ int main() {
         double max_lambda = 0.0;
         for (int i = 0; i < nx; i++) {
             max_lambda = std::max(max_lambda, std::abs(variables[i].u) + variables[i].calculete_c(gamma));
+            if (variables[i].rho <= 0) {
+                std::cout << "ERROR: Negative density at i=" << i
+                          << ", rho=" << variables[i].rho << std::endl;
+            }
         }
         // корректировка шага по времени для выполнения условия устойчивости
-        t = CFL * h / max_lambda;
-        if (time + t > T) {
-            t = T - time;
+        t = 10e-7;
+        CFL = t * max_lambda / h;
+        while (CFL > 0.01) {
+            t /= 2.0;
+            CFL = t * max_lambda / h;
         }
 
         std::vector<std::vector<double>> w_old = w;
@@ -126,9 +129,14 @@ int main() {
                 grad_one[k] = (w_old[i + 1][k] - w_old[i - 1][k]) / (2.0 * h);
                 grad_two[k] = (w_old[i + 1][k] - 2.0 * w_old[i][k] + w_old[i - 1][k]) / (2.0 * h);
             }
+            matrix OmegaT_inv = OmegaT.inverse();
+            matrix AbsLambda = Lambda.abs();
+            matrix D = OmegaT_inv * AbsLambda * OmegaT;
+            std::vector<double> A_grad = A * grad_one;
+            std::vector<double> D_grad = D * grad_two;
+
             for (int k = 0; k < A.get_y_size(); k++) {
-                w[i][k] = w_old[i][k] - t * (A * grad_one)[k] +
-                          t * ((OmegaT.inverse() * (Lambda.abs() * OmegaT)) * grad_two)[k];
+                w[i][k] = w_old[i][k] - t * A_grad[k] + t * D_grad[k];
             }
         }
         for (int i = 0; i < nx; i++) {
@@ -143,17 +151,19 @@ int main() {
             w[nx - 1][k] = w[nx - 2][k];
         }
         ind_time += 1;
-        if (ind_time < ny) {
-            for (int i = 0; i < nx; i++) {
-                grid_rho.set_value(i, ind_time, variables[i].rho);
-                grid_u.set_value(i, ind_time, variables[i].u);
-                grid_p.set_value(i, ind_time, variables[i].p);
-                grid_e.set_value(i, ind_time, variables[i].e);
-            }
-        }
-
         time += t;
+        grid_rho.add_time_layer(time);
+        grid_u.add_time_layer(time);
+        grid_p.add_time_layer(time);
+        grid_e.add_time_layer(time);
+        for (int i = 0; i < nx; i++) {
+            grid_rho.set_value(i, ind_time, variables[i].rho);
+            grid_u.set_value(i, ind_time, variables[i].u);
+            grid_p.set_value(i, ind_time, variables[i].p);
+            grid_e.set_value(i, ind_time, variables[i].e);
+        }
         if (T - time < 10e-12) {
+            std::cout << "Break" << '\n';
             break;
         }
     }
