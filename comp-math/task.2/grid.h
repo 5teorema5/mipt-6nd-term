@@ -33,9 +33,9 @@ public:
 
     double get_ny();
 
-    double get_value(double i, double j);
+    double get_value(int i, int j);
 
-    void set_value(double i, double j, double val);
+    void set_value(int i, int j, double val);
 
     void clear_value();
     

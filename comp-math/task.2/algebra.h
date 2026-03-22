@@ -42,6 +42,8 @@ public:
 
     matrix operator*(const matrix &other) const;
 
+    matrix abs() const;
+
     void print_matrix();
 };
 

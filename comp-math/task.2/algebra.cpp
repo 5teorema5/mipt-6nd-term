@@ -152,7 +152,7 @@ std::vector<double> matrix::operator*(const std::vector<double> other) const {
         for (int i = 0; i < x_size; i++) {
             sum += content[j][i] * other[i];
         }
-        result[i] = sum;
+        result[j] = sum;
     }
     return result;
 }
@@ -176,6 +176,17 @@ matrix matrix::operator*(const matrix &other) const {
         }
         return matrix(new_x, new_y, new_content);
     }
+}
+
+matrix matrix::abs() const {
+    std::vector<double> result;
+    result.reserve(this->x_size * this->y_size);
+    for (int j = 0; j < this->y_size; j++) {
+        for (int i = 0; i < this->x_size; i++) {
+            result.push_back(std::abs(this->content[j][i]));
+        }
+    }
+    return matrix(this->x_size, this->y_size, result);
 }
 
 void matrix::print_matrix() {
