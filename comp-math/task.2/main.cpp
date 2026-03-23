@@ -86,10 +86,6 @@ int main() {
         double max_lambda = 0.0;
         for (int i = 0; i < nx; i++) {
             max_lambda = std::max(max_lambda, std::abs(variables[i].u) + variables[i].calculete_c(gamma));
-            if (variables[i].rho <= 0) {
-                std::cout << "ERROR: Negative density at i=" << i
-                          << ", rho=" << variables[i].rho << std::endl;
-            }
         }
         // корректировка шага по времени для выполнения условия устойчивости
         t = 10e-7;
@@ -152,10 +148,12 @@ int main() {
         }
         ind_time += 1;
         time += t;
-        grid_rho.add_time_layer(time);
-        grid_u.add_time_layer(time);
-        grid_p.add_time_layer(time);
-        grid_e.add_time_layer(time);
+        if (ind_time >= grid_rho.get_ny()) {
+            grid_rho.add_time_layer(time);
+            grid_u.add_time_layer(time);
+            grid_p.add_time_layer(time);
+            grid_e.add_time_layer(time);
+        }
         for (int i = 0; i < nx; i++) {
             grid_rho.set_value(i, ind_time, variables[i].rho);
             grid_u.set_value(i, ind_time, variables[i].u);

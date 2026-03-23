@@ -105,11 +105,11 @@ void grid2d::save_to_file(std::string name) {
         std::cout << "Error opening file: " << filename << std::endl;
         return;
     }
-    file << "time";
-    for (int i = 1; i < nx + 1; i++) {
-        file << ",x=" << std::fixed << std::setprecision(6) << x_coord[i - 1];
-    }
-    file << '\n';
+//    file << "time";
+//    for (int i = 1; i < nx + 1; i++) {
+//        file << ",x=" << std::fixed << std::setprecision(6) << x_coord[i - 1];
+//    }
+//    file << '\n';
     for (int j = 1; j < ny + 1; j++) {
         file << std::fixed << std::setprecision(8) << y_coord[j - 1];
         for (int i = 1; i < nx + 1; i++) {
