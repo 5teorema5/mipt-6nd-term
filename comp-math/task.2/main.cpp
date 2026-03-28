@@ -3,48 +3,17 @@
 #include <cmath>
 #include "algebra.h"
 #include "grid.h"
-
-struct state {
-    double u;       // скорость, м/с
-    double rho;     // плотность, кг/м3
-    double p;       // давление, Па
-    double e;       // удельная внутренняя энергия, Дж/кг
-
-    state() : u(0), rho(0), p(0), e(0) {}
-
-    state(double u_, double rho_, double p_, double e_) : u(u_), rho(rho_), p(p_), e(e_) {}
-
-    // консервативные переменные
-    std::vector<double> toCons() const {
-        return std::vector<double>{rho, rho * u, rho * e};
-    }
-
-    static state fromCons(std::vector<double> toCons_, double gamma) {
-        double rho = toCons_[0];
-        double u = toCons_[1] / rho;
-        double e = toCons_[2] / rho;
-        double p = (gamma - 1) * rho * e;
-        return state(u, rho, p, e);
-    }
-
-    // скорость звука
-    double calculete_c(double gamma) const {
-        return sqrt(gamma * p / rho);
-    }
-
-    void calculate_e(double gamma) {
-        e = p / ((gamma - 1) * rho);
-    }
-};
+#include "state.h"
 
 int main() {
+    int count = 0;
     int L = 10;
-    double T = 0.02;
+    double T = 0.015;
     double gamma = 5.0 / 3.0;
     double h = 0.1;       // шаг по пространству
     double t_init = 10e-7;     // шаг по времени
     double t = t_init;
-    double CFL = 0.01;     // число Куранта меньше 0.01 для устойчивости
+    double CFL_max = 0.01;     // число Куранта меньше 0.01 для устойчивости
 
     state left_state = {0.0, 13.0, 10e5, 0.0};
     state right_state = {0.0, 1.3, 1e5, 0.0};
@@ -82,22 +51,25 @@ int main() {
     int ind_time = 0;
 
     while (time < T) {
+//    for (int s = 0; s < 10000; s++) {
+        count += 1;
         std::cout << time << '\n';
+
         double max_lambda = 0.0;
         for (int i = 0; i < nx; i++) {
-            max_lambda = std::max(max_lambda, std::abs(variables[i].u) + variables[i].calculete_c(gamma));
+            max_lambda = std::max(max_lambda, std::max(variables[i].u + variables[i].calculete_c(gamma),
+                                  variables[i].u - variables[i].calculete_c(gamma)));
         }
-        // корректировка шага по времени для выполнения условия устойчивости
+
         t = 10e-7;
-        CFL = t * max_lambda / h;
-        while (CFL > 0.01) {
+        double CFL = t * max_lambda / h;
+        while (CFL > CFL_max) {
             t /= 2.0;
             CFL = t * max_lambda / h;
         }
 
         std::vector<std::vector<double>> w_old = w;
 
-        // рассчёт вектора консервативных переменных
         for (int i = 1; i < nx - 1; i++) {
             double u = variables[i].u;
             double c = variables[i].calculete_c(gamma);
@@ -108,6 +80,13 @@ int main() {
                     u * c, -c, gamma - 1
             };
             matrix OmegaT = matrix(3, 3, omega_data);
+
+            omega_data = {
+                    1 / (2 * c * c), -2 / (2 * c * c), 1 / (2 * c * c),
+                    (u + c) / (2 * c * c), -2 * u / (2 * c * c), (u - c) / (2 * c * c),
+                    1 / (2 * (gamma - 1)), 0, 1 / (2 * (gamma - 1)),
+            };
+            matrix OmegaT_inv = matrix(3, 3, omega_data);
 
             std::vector<double> lambda_data = {
                     u - c, 0, 0,
@@ -125,7 +104,7 @@ int main() {
                 grad_one[k] = (w_old[i + 1][k] - w_old[i - 1][k]) / (2.0 * h);
                 grad_two[k] = (w_old[i + 1][k] - 2.0 * w_old[i][k] + w_old[i - 1][k]) / (2.0 * h);
             }
-            matrix OmegaT_inv = OmegaT.inverse();
+//            matrix OmegaT_inv = OmegaT.inverse();
             matrix AbsLambda = Lambda.abs();
             matrix D = OmegaT_inv * AbsLambda * OmegaT;
             std::vector<double> A_grad = A * grad_one;
@@ -137,7 +116,7 @@ int main() {
         }
         for (int i = 0; i < nx; i++) {
             double rho = w[i][0];
-            double u = w[i][1] / rho;
+            double u = std::abs(w[i][1] / rho);
             double e = w[i][2] / rho;
             double p = (gamma - 1) * rho * e;
             variables[i] = state(u, rho, p, e);
@@ -146,22 +125,20 @@ int main() {
             w[0][k] = w[1][k];
             w[nx - 1][k] = w[nx - 2][k];
         }
-        ind_time += 1;
         time += t;
-        if (ind_time >= grid_rho.get_ny()) {
-            grid_rho.add_time_layer(time);
-            grid_u.add_time_layer(time);
-            grid_p.add_time_layer(time);
-            grid_e.add_time_layer(time);
-        }
+//        grid_rho.add_time_layer(time);
+//        grid_u.add_time_layer(time);
+//        grid_p.add_time_layer(time);
+//        grid_e.add_time_layer(time);
         for (int i = 0; i < nx; i++) {
-            grid_rho.set_value(i, ind_time, variables[i].rho);
-            grid_u.set_value(i, ind_time, variables[i].u);
-            grid_p.set_value(i, ind_time, variables[i].p);
-            grid_e.set_value(i, ind_time, variables[i].e);
+            grid_rho.set_value(i, 0, variables[i].rho);
+            grid_u.set_value(i, 0, variables[i].u);
+            grid_p.set_value(i, 0, variables[i].p);
+            grid_e.set_value(i, 0, variables[i].e);
+//            grid_e.set_value(i, grid_rho.get_ny() - 1, variables[i].e);
         }
         if (T - time < 10e-12) {
-            std::cout << "Break" << '\n';
+            std::cout << "Break" << ' ' << count << '\n';
             break;
         }
     }

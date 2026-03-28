@@ -8,6 +8,7 @@ set(SOURCES
         main.cpp
         grid.cpp
         algebra.cpp
+        state.h
         )
 
 add_executable(app ${SOURCES})
