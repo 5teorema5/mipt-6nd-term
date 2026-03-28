@@ -1,0 +1,38 @@
+#!/bin/sh
+cd ${0%/*} || exit 1                        # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+
+createPic()
+{
+    gnuplot<<EOF
+    set terminal png size 800,700 font "Times-Roman,24"
+    set output "result.png"
+    set key bottom right
+    set yrange [0:1.1]
+    set ylabel "T"
+    set xlabel "x"
+    set xrange [0:1]
+    set style circle radius graph 0.006
+    plot 'toCompare/0.005.dat' title "Лыков 0.005" with circles linewidth 2, 'postProcessing/singleGraph/0.005/line_T.xy' title "computation 0.005" with lines linewidth 2,  'toCompare/0.01.dat' title "Лыков 0.01" with circles linewidth 2, 'postProcessing/singleGraph/0.01/line_T.xy' title "computation 0.01" with lines linewidth 2, 'toCompare/0.04.dat' title "Лыков 0.04" with circles linewidth 2, 'postProcessing/singleGraph/0.04/line_T.xy' title "computation 0.04" with lines linewidth 2    
+EOF
+}
+
+# Test if gnuplot exists on the system
+command -v gnuplot >/dev/null 2>&1 || {
+    echo "FOAM FATAL ERROR: gnuplot not found - skipping graph creation" 1>&2
+    exit 1
+}
+
+
+for file in $(find . -name 'cellDisplacement')
+do
+  cp -f  $file $(echo "$file" | sed -r 's|cellDisplacement|U|g')
+done 
+
+runApplication postProcess -func singleGraph
+
+#gnuplot res-gnuplot 
+createPic
+
+
+#------------------------------------------------------------------------------
