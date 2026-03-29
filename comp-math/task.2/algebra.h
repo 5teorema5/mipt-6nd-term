@@ -22,6 +22,8 @@ public:
 
     int get_y_size() const;
 
+    double get_content(int i, int j) const;
+
     matrix transposition();
 
     matrix inverse() const;

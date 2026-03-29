@@ -29,6 +29,10 @@ int matrix::get_y_size() const {
     return this->y_size;
 }
 
+double matrix::get_content(int i, int j) const {
+    return this->content[j][i];
+}
+
 matrix matrix::transposition() {
     std::vector<double> t_content(x_size * y_size);
     for (int j = 0; j < this->y_size; j++) {
@@ -48,15 +52,15 @@ matrix matrix::inverse() const {
         double a11 = this->content[0][0], a12 = this->content[0][1], a13 = this->content[0][2],
                 a21 = this->content[1][0], a22 = this->content[1][1], a23 = this->content[1][2],
                 a31 = this->content[2][0], a32 = this->content[2][1], a33 = this->content[2][2];
-        double det = a11 * (a22 * a33 - a32 * a23) - a21 * (a12 * a33 - a32 * a13) + a31 * (a12 * a23 - a22 * a13);
+        double det = a11 * (a22 * a33 - a32 * a23) - a12 * (a21 * a33 - a23 * a31) + a13 * (a21 * a32 - a22 * a31);
 
         if (std::abs(det) < 1e-12) {
             std::cout << "Error: detA = 0" << '\n';
             return matrix(this->x_size, this->y_size);
         } else {
             new_content[0] = +(a22 * a33 - a32 * a23);
-            new_content[1] = -(a12 * a33 - a32 * a13);
-            new_content[2] = +(a12 * a23 - a22 * a13);
+            new_content[1] = -(a21 * a33 - a23 * a31);
+            new_content[2] = +(a21 * a32 - a22 * a31);
 
             new_content[3] = -(a12 * a33 - a13 * a32);
             new_content[4] = +(a11 * a33 - a13 * a31);
@@ -74,7 +78,7 @@ matrix matrix::inverse() const {
     }
 }
 
-double& matrix::operator()(int i, int j) {
+double &matrix::operator()(int i, int j) {
     if (i >= this->x_size or j >= this->y_size) {
         std::cout << "Matrix size error" << '\n';
     } else {

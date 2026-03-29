@@ -1,14 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 
 
-def plot_at_time(variable_name, target_time, L=10.0, save_fig=True):
+def plot_at_time(variable_name, target_time, L=10.0):
     data_file = f'data/{variable_name}.csv'
     data = np.genfromtxt(data_file, delimiter=',', skip_header=0)
 
     y_coord = data[1:]
-    x_coord = np.linspace(-L/2, L/2, y_coord.size)
+    x_coord = np.linspace(-L, L, y_coord.size)
 
     fig, ax = plt.subplots(figsize=(12, 6))
 
@@ -21,7 +20,7 @@ def plot_at_time(variable_name, target_time, L=10.0, save_fig=True):
 
     title_ru, units, title_en = titles.get(variable_name, ('Value', '', 'value'))
 
-    ax.plot(x_coord, y_coord, 'b-', linewidth=2, label=f'{title_ru}')
+    ax.plot(x_coord, y_coord, 'b.', linewidth=2, label=f'{title_ru}')
     ax.set_xlabel('x (м)', fontsize=12)
     ax.set_ylabel(f'{title_ru} {units}', fontsize=12)
     ax.set_title(f'{title_ru} в момент времени t = {target_time} с', fontsize=14)
@@ -36,10 +35,8 @@ def plot_at_time(variable_name, target_time, L=10.0, save_fig=True):
     ax.set_ylim(y_min - margin, y_max + margin)
 
     plt.tight_layout()
-
-    if save_fig:
-        output_file = f'results/plot_{variable_name}_t={target_time}.png'
-        plt.savefig(output_file, dpi=150, bbox_inches='tight')
+    output_file = f'results/plot_{variable_name}_t={target_time}.png'
+    plt.savefig(output_file, dpi=150, bbox_inches='tight')
 
 
 if __name__ == "__main__":
